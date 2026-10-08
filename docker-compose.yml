@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: task-manager-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: task_manager
+      POSTGRES_USER: task_manager_user
+      POSTGRES_PASSWORD: task_manager_password
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  postgres_data:
