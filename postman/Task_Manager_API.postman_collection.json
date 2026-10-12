@@ -1,267 +1,375 @@
-openapi: 3.0.3
 
-info:
-title: Task Manager API
-description: RESTful API for managing users, tasks, and comments.
-version: 1.0.0
-
-servers:
-
-* url: http://localhost:8080
-
-paths:
-
-/api/v1/tasks:
-get:
-summary: Get all tasks
-description: Returns a list of all tasks.
-parameters:
-- name: status
-in: query
-required: false
-schema:
-type: string
-description: Filter tasks by status.
-responses:
-'200':
-description: Successful response
-
-```
-post:
-  summary: Create a task
-  description: Creates a new task.
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/CreateTaskRequest'
-  responses:
-    '201':
-      description: Task created successfully
-    '400':
-      description: Invalid request
-```
-
-/api/v1/tasks/{id}:
-get:
-summary: Get task by ID
-description: Returns a single task using its ID.
-parameters:
-- name: id
-in: path
-required: true
-schema:
-type: integer
-responses:
-'200':
-description: Successful response
-'404':
-description: Task not found
-
-```
-put:
-  summary: Update a task
-  description: Replaces an existing task.
-  parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/UpdateTaskRequest'
-  responses:
-    '200':
-      description: Task updated successfully
-    '404':
-      description: Task not found
-
-patch:
-  summary: Partially update a task
-  description: Updates selected fields of an existing task.
-  parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: string
-  responses:
-    '200':
-      description: Task updated successfully
-    '404':
-      description: Task not found
-
-delete:
-  summary: Delete a task
-  description: Deletes an existing task.
-  parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-  responses:
-    '204':
-      description: Task deleted successfully
-    '404':
-      description: Task not found
-```
-
-/api/v1/tasks/{id}/comments:
-get:
-summary: Get comments for a task
-description: Returns all comments belonging to a task.
-parameters:
-- name: id
-in: path
-required: true
-schema:
-type: integer
-responses:
-'200':
-description: Successful response
-'404':
-description: Task not found
-
-```
-post:
-  summary: Create a comment
-  description: Creates a new comment for a task.
-  parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/CreateCommentRequest'
-  responses:
-    '201':
-      description: Comment created successfully
-    '400':
-      description: Invalid request
-    '404':
-      description: Task not found
-```
-
-/api/v1/tasks/{id}/comments/{commentId}:
-get:
-summary: Get a specific comment
-description: Returns a specific comment belonging to a task.
-parameters:
-- name: id
-in: path
-required: true
-schema:
-type: integer
-- name: commentId
-in: path
-required: true
-schema:
-type: integer
-responses:
-'200':
-description: Successful response
-'404':
-description: Comment not found
-
-```
-delete:
-  summary: Delete a comment
-  description: Deletes a comment from a task.
-  parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
-    - name: commentId
-      in: path
-      required: true
-      schema:
-        type: integer
-  responses:
-    '204':
-      description: Comment deleted successfully
-    '404':
-      description: Comment not found
-```
-
-components:
-schemas:
-
-```
-CreateTaskRequest:
-  type: object
-  required:
-    - title
-    - userId
-  properties:
-    title:
-      type: string
-      example: Learn Postman
-    description:
-      type: string
-      example: Practice testing REST API requests.
-    status:
-      type: string
-      example: PENDING
-    priority:
-      type: string
-      example: MEDIUM
-    dueDate:
-      type: string
-      format: date
-      example: 2026-10-20
-    userId:
-      type: integer
-      example: 1
-
-UpdateTaskRequest:
-  type: object
-  properties:
-    title:
-      type: string
-    description:
-      type: string
-    status:
-      type: string
-    priority:
-      type: string
-    dueDate:
-      type: string
-      format: date
-    userId:
-      type: integer
-
-CreateCommentRequest:
-  type: object
-  required:
-    - content
-    - userId
-  properties:
-    content:
-      type: string
-      example: This task is progressing well.
-    userId:
-      type: integer
-      example: 1
-```
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Task Manager API",
+    "description": "RESTful API for managing users, tasks, and comments.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1/tasks": {
+      "get": {
+        "summary": "Get all tasks",
+        "description": "Returns a list of all tasks.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Filter tasks by status.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a task",
+        "description": "Creates a new task.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}": {
+      "get": {
+        "summary": "Get task by ID",
+        "description": "Returns a single task using its ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a task",
+        "description": "Replaces an existing task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Partially update a task",
+        "description": "Updates selected fields of an existing task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a task",
+        "description": "Deletes an existing task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted successfully"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}/comments": {
+      "get": {
+        "summary": "Get comments for a task",
+        "description": "Returns all comments belonging to a task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a comment",
+        "description": "Creates a new comment for a task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment created successfully"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{id}/comments/{commentId}": {
+      "get": {
+        "summary": "Get a specific comment",
+        "description": "Returns a specific comment belonging to a task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a comment",
+        "description": "Deletes a comment from a task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Comment deleted successfully"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateTaskRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "userId"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Learn Postman"
+          },
+          "description": {
+            "type": "string",
+            "example": "Practice testing REST API requests."
+          },
+          "status": {
+            "type": "string",
+            "example": "PENDING"
+          },
+          "priority": {
+            "type": "string",
+            "example": "MEDIUM"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-10-20"
+          },
+          "userId": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "UpdateTaskRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "userId": {
+            "type": "integer"
+          }
+        }
+      },
+      "CreateCommentRequest": {
+        "type": "object",
+        "required": [
+          "content",
+          "userId"
+        ],
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This task is progressing well."
+          },
+          "userId": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      }
+    }
+  }
+}

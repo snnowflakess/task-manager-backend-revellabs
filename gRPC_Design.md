@@ -2,79 +2,31 @@
 
 ## 1. gRPC Overview
 
-gRPC is a high-performance Remote Procedure Call (RPC) framework that allows a client application to call functions or methods on a remote server.
+gRPC is a framework that allows applications to communicate with a server by calling its methods remotely.
 
-gRPC uses **Protocol Buffers (Protobuf)** to define the structure of requests and responses. The service contract is written in a `.proto` file.
+It uses **Protocol Buffers (Protobuf)** to define requests and responses and **HTTP/2** for communication.
 
-For the Task Manager backend, gRPC will provide operations for managing tasks and comments.
+The Task Manager gRPC service is called `TaskService`. Its definition is stored in `proto/task_manager.proto`.
 
-### gRPC Service
-
-The main gRPC service is:
-
-```text
-TaskService
-```
-
-The service will provide operations for:
-
-* Creating tasks
-* Retrieving tasks
-* Updating tasks
-* Deleting tasks
-* Retrieving comments
-* Creating comments
-
-### Protocol Buffers
-
-The gRPC API will use **Protocol Buffers** to define:
-
-* Services
-* RPC methods
-* Request messages
-* Response messages
-* Data types
-
-The service definition will be stored in:
-
-```text
-proto/task_manager.proto
-```
-
-### Communication
-
-The client communicates with the gRPC server using **HTTP/2**.
-
-The gRPC interface is designed separately from the REST and GraphQL interfaces, while all three interfaces represent the same Task Manager backend system.
-
+It supports task and comment operations such as creating, retrieving, updating, and deleting data.
 
 ## 2. gRPC Service Definition
 
-The Task Manager gRPC API will use a `TaskService` service.
+The `TaskService` provides the following methods:
 
-The service will define RPC methods for task and comment operations.
+**Task Operations:**
+- `CreateTask` – Creates a task.
+- `GetTask` – Retrieves a task by ID.
+- `ListTasks` – Retrieves all tasks.
+- `UpdateTask` – Updates a task.
+- `DeleteTask` – Deletes a task.
 
-### Task Operations
+**Comment Operations:**
+- `ListComments` – Retrieves comments for a task.
+- `CreateComment` – Creates a comment.
+- `DeleteComment` – Deletes a comment.
 
-| RPC Method | Purpose                  |
-| ---------- | ------------------------ |
-| CreateTask | Creates a new task       |
-| GetTask    | Retrieves a single task  |
-| ListTasks  | Retrieves all tasks      |
-| UpdateTask | Updates an existing task |
-| DeleteTask | Deletes a task           |
-
-### Comment Operations
-
-| RPC Method    | Purpose                       |
-| ------------- | ----------------------------- |
-| ListComments  | Retrieves comments for a task |
-| CreateComment | Creates a new comment         |
-| DeleteComment | Deletes a comment             |
-
-### Service Definition
-
-The service can be represented using the following Protocol Buffer definition:
+Example service definition:
 
 ```protobuf
 service TaskService {
@@ -83,22 +35,19 @@ service TaskService {
   rpc ListTasks(ListTasksRequest) returns (ListTasksResponse);
   rpc UpdateTask(UpdateTaskRequest) returns (Task);
   rpc DeleteTask(DeleteTaskRequest) returns (DeleteTaskResponse);
-
   rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
   rpc CreateComment(CreateCommentRequest) returns (Comment);
   rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse);
 }
 ```
 
-Each RPC method accepts a **request message** and returns a **response message**.
-
-The request contains the information required to perform an operation, while the response contains the result returned by the server.
+Each RPC method receives a request message and returns a response message.
 
 ## 3. Request and Response Messages
 
-gRPC uses Protocol Buffer messages to define the data sent between the client and server.
+Protocol Buffer messages define the data exchanged between the client and server.
 
-### Task Message
+**Task Message:**
 
 ```protobuf
 message Task {
@@ -109,12 +58,10 @@ message Task {
   string priority = 5;
   string due_date = 6;
   int64 user_id = 7;
-  string created_at = 8;
-  string updated_at = 9;
 }
 ```
 
-### Create Task
+**Create Task:**
 
 ```protobuf
 message CreateTaskRequest {
@@ -122,14 +69,11 @@ message CreateTaskRequest {
   string description = 2;
   string status = 3;
   string priority = 4;
-  string due_date = 5;
-  int64 user_id = 6;
+  int64 user_id = 5;
 }
 ```
 
-The server returns the newly created `Task`.
-
-### Get Task
+**Get Task:**
 
 ```protobuf
 message GetTaskRequest {
@@ -137,9 +81,7 @@ message GetTaskRequest {
 }
 ```
 
-The server returns the requested `Task`.
-
-### List Tasks
+**List Tasks:**
 
 ```protobuf
 message ListTasksRequest {
@@ -151,24 +93,9 @@ message ListTasksResponse {
 }
 ```
 
-The `status` field can be used to filter tasks. If no status is provided, all tasks can be returned.
+The status field can filter tasks. The `repeated` keyword allows the response to contain multiple tasks.
 
-### Update Task
-
-```protobuf
-message UpdateTaskRequest {
-  int64 id = 1;
-  string title = 2;
-  string description = 3;
-  string status = 4;
-  string priority = 5;
-  string due_date = 6;
-}
-```
-
-The server returns the updated `Task`.
-
-### Delete Task
+**Delete Task:**
 
 ```protobuf
 message DeleteTaskRequest {
@@ -180,9 +107,7 @@ message DeleteTaskResponse {
 }
 ```
 
-The `success` field indicates whether the task was successfully deleted.
-
-### Comment Message
+**Comment Message:**
 
 ```protobuf
 message Comment {
@@ -190,11 +115,10 @@ message Comment {
   string content = 2;
   int64 task_id = 3;
   int64 user_id = 4;
-  string created_at = 5;
 }
 ```
 
-### Comment Operations
+**Comment Operations:**
 
 ```protobuf
 message ListCommentsRequest {
@@ -220,6 +144,4 @@ message DeleteCommentResponse {
 }
 ```
 
-These messages define the input and output structure for the gRPC methods documented above.
-
-
+These messages define the information required to create, retrieve, and delete tasks and comments.
