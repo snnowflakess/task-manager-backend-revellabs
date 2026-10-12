@@ -154,4 +154,4 @@ Both versions may run simultaneously during a migration period. Clients can move
 
 ### Implementation Note
 
-This document defines the proposed versioning strategy. The current project documents v1; a working v2 API and migration process have not been implemented.
+This document defines the proposed versioning strategy. The current project documents v1; a working v2 API and migration process have not been impl
