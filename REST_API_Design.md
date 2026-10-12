@@ -119,3 +119,39 @@ The API returns JSON messages when a request fails.
 ```
 
 A consistent error format helps clients understand and handle errors easily.
+
+
+## API Versioning Strategy
+
+### Version 1 (v1)
+
+The current API uses URL-based versioning:
+
+`/api/v1/`
+
+Examples:
+- `GET /api/v1/tasks`
+- `POST /api/v1/tasks`
+- `GET /api/v1/tasks/{id}`
+
+Version 1 provides the initial functionality for managing users, tasks, and comments.
+
+### Version 2 (v2)
+
+A new version will be introduced when changes could break existing clients, such as renaming fields, changing response structures, or removing endpoints.
+
+Examples:
+- `GET /api/v2/tasks`
+- `POST /api/v2/tasks`
+
+Version 2 can introduce improved response formats, additional filtering options, or new fields while allowing existing v1 clients to continue using the old API.
+
+### Backward Compatibility
+
+Non-breaking changes, such as adding an optional field, can generally be introduced into v1. Breaking changes should be introduced in v2.
+
+Both versions may run simultaneously during a migration period. Clients can move to v2 when ready, after which v1 can be deprecated according to a communicated retirement schedule.
+
+### Implementation Note
+
+This document defines the proposed versioning strategy. The current project documents v1; a working v2 API and migration process have not been implemented.
