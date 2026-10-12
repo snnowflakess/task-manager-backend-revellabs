@@ -1,0 +1,210 @@
+openapi: 3.0.3
+
+info:
+title: Task Manager API
+description: REST API specification for managing tasks and comments.
+version: 1.0.0
+
+servers:
+
+* url: http://localhost:8080
+  description: Local development server (planned)
+
+tags:
+
+* name: Tasks
+* name: Comments
+
+paths:
+/api/v1/tasks:
+get:
+tags:
+- Tasks
+summary: Get all tasks
+responses:
+'200':
+description: Tasks retrieved successfully
+
+post:
+  tags:
+    - Tasks
+  summary: Create a task
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateTaskRequest'
+  responses:
+    '201':
+      description: Task created successfully
+    '400':
+      description: Invalid request
+```
+
+/api/v1/tasks/{id}:
+parameters:
+- name: id
+in: path
+required: true
+schema:
+type: integer
+get:
+tags:
+- Tasks
+summary: Get a task by ID
+responses:
+'200':
+description: Task retrieved successfully
+'404':
+description: Task not found
+
+```
+put:
+  tags:
+    - Tasks
+  summary: Replace a task
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateTaskRequest'
+  responses:
+    '200':
+      description: Task updated successfully
+    '404':
+      description: Task not found
+
+patch:
+  tags:
+    - Tasks
+  summary: Partially update a task
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/UpdateTaskRequest'
+  responses:
+    '200':
+      description: Task partially updated successfully
+    '404':
+      description: Task not found
+
+delete:
+  tags:
+    - Tasks
+  summary: Delete a task
+  responses:
+    '204':
+      description: Task deleted successfully
+    '404':
+      description: Task not found
+```
+
+/api/v1/tasks/{id}/comments:
+parameters:
+- name: id
+in: path
+required: true
+schema:
+type: integer
+get:
+tags:
+- Comments
+summary: Get comments for a task
+responses:
+'200':
+description: Comments retrieved successfully
+
+```
+post:
+  tags:
+    - Comments
+  summary: Add a comment to a task
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateCommentRequest'
+  responses:
+    '201':
+      description: Comment created successfully
+    '404':
+      description: Task not found
+```
+
+components:
+schemas:
+CreateTaskRequest:
+type: object
+required:
+- title
+- userId
+properties:
+title:
+type: string
+example: Complete backend documentation
+description:
+type: string
+example: Finish the Task Manager project
+status:
+type: string
+enum:
+- PENDING
+- IN_PROGRESS
+- COMPLETED
+default: PENDING
+priority:
+type: string
+enum:
+- LOW
+- MEDIUM
+- HIGH
+default: MEDIUM
+dueDate:
+type: string
+format: date
+example: '2026-10-20'
+userId:
+type: integer
+example: 1
+
+```
+UpdateTaskRequest:
+  type: object
+  properties:
+    title:
+      type: string
+    description:
+      type: string
+    status:
+      type: string
+      enum:
+        - PENDING
+        - IN_PROGRESS
+        - COMPLETED
+    priority:
+      type: string
+      enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+    dueDate:
+      type: string
+      format: date
+
+CreateCommentRequest:
+  type: object
+  required:
+    - content
+    - userId
+  properties:
+    content:
+      type: string
+      example: The task is progressing well.
+    userId:
+      type: integer
+      example: 1
